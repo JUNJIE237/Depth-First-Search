@@ -28,9 +28,9 @@ public class testing {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("1. Check Route");
-            System.out.println("2. Exit");
-            System.out.print("Enter your choice: ");
+            System.out.println("Press 1 for Check Route");
+            System.out.println("Press 2 for Exit\n");
+            System.out.print("Enter Your Choice: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -56,7 +56,7 @@ public class testing {
 
                         if (allPaths.isEmpty()) {
                             System.out.println("* NO PATH FROM " + startVertex + " -> " + destinationVertex);
-                            System.out.println("* PLEASETRY AGAIN");
+                            System.out.println("* PLEASE TRY AGAIN");
                             System.out.println("******************************************************");
                         } else {
                             int count = 1;
@@ -74,7 +74,7 @@ public class testing {
                     exit = true;
                     break;
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println("Invalid choice. Please try again!");
                     break;
             }
         }
