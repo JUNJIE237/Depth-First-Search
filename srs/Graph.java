@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Graph {
-    private int numVertices;
-    List<Edge>[] adjacencyList;
+     private int numVertices;
+    private List<Integer>[] adjacencyList;
 
     public Graph(int numVertices) {
         this.numVertices = numVertices;
         adjacencyList = new ArrayList[numVertices];
+        cityName = new ArrayList<>();
+
         for (int i = 0; i < numVertices; i++) {
             adjacencyList[i] = new ArrayList<>();
         }
@@ -60,6 +62,14 @@ class Graph {
             }
         }
         return shortestPath;
+    }
+
+    public void addCity(String newCity) {
+        cityName.add(newCity);
+    }
+
+    public List<String> getCity() {
+        return cityName;
     }
 }
 
