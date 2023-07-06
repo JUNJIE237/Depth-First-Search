@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Graph {
-     private int numVertices;
-    private List<Integer>[] adjacencyList;
+    private int numVertices;
+    List<Edge>[] adjacencyList;
 
     public Graph(int numVertices) {
         this.numVertices = numVertices;
@@ -15,9 +15,9 @@ class Graph {
         }
     }
 
-    public void addEdge(int source, int destination) {
-        adjacencyList[source].add(destination);
-        adjacencyList[destination].add(source);
+    public void addEdge(int source, int destination, int weight) {
+        Edge edge = new Edge(destination, weight);
+        adjacencyList[source].add(edge);
     }
 
     public List<List<Integer>> findPathDFS(int start, int destination) {
@@ -29,14 +29,15 @@ class Graph {
     }
 
     private void dfs(int vertex, int destination, boolean[] visited, List<Integer> currentPath,
-            List<List<Integer>> allPath) {
+                     List<List<Integer>> allPath) {
         visited[vertex] = true;
         currentPath.add(vertex);
 
         if (vertex == destination) {
             allPath.add(new ArrayList<>(currentPath));
         } else {
-            for (int adjacent : adjacencyList[vertex]) {
+            for (Edge edge : adjacencyList[vertex]) {
+                int adjacent = edge.getDestination();
                 if (!visited[adjacent]) {
                     dfs(adjacent, destination, visited, currentPath, allPath);
                 }
@@ -59,5 +60,23 @@ class Graph {
             }
         }
         return shortestPath;
+    }
+}
+
+class Edge {
+    private int destination;
+    private int weight;
+
+    public Edge(int destination, int weight) {
+        this.destination = destination;
+        this.weight = weight;
+    }
+
+    public int getDestination() {
+        return destination;
+    }
+
+    public int getWeight() {
+        return weight;
     }
 }
