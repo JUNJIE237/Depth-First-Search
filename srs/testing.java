@@ -1,11 +1,83 @@
-package srs;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import srs.Graph;
 
+class Graph {
+    private int numVertices;
+    private List<Integer>[] adjacencyList;
 
+    public Graph(int numVertices) {
+        this.numVertices = numVertices;
+        adjacencyList = new ArrayList[numVertices];
+        for (int i = 0; i < numVertices; i++) {
+            adjacencyList[i] = new ArrayList<>();
+        }
+    }
+
+    public void addEdge(int source, int destination) {
+        adjacencyList[source].add(destination);
+        adjacencyList[destination].add(source);
+    }
+
+    public void removeEdge(int source, int destination) {
+        adjacencyList[source].remove(Integer.valueOf(destination));
+        adjacencyList[destination].remove(Integer.valueOf(source));
+    }
+
+    public void addVertex() {
+        numVertices++;
+        List<Integer> newVertex = new ArrayList<>();
+        adjacencyList[numVertices - 1] = newVertex;
+    }
+
+    public void removeVertex(int vertex) {
+        adjacencyList[vertex].clear();
+        for (int i = 0; i < numVertices; i++) {
+            adjacencyList[i].remove(Integer.valueOf(vertex));
+        }
+    }
+
+    public List<List<Integer>> findPathDFS(int start, int destination) {
+        boolean[] visited = new boolean[numVertices];
+        List<Integer> currentPath = new ArrayList<>();
+        List<List<Integer>> allPath = new ArrayList<>();
+        dfs(start, destination, visited, currentPath, allPath);
+        return allPath;
+    }
+
+    private void dfs(int vertex, int destination, boolean[] visited, List<Integer> currentPath,
+            List<List<Integer>> allPath) {
+        visited[vertex] = true;
+        currentPath.add(vertex);
+
+        if (vertex == destination) {
+            allPath.add(new ArrayList<>(currentPath));
+        } else {
+            for (int adjacent : adjacencyList[vertex]) {
+                if (!visited[adjacent]) {
+                    dfs(adjacent, destination, visited, currentPath, allPath);
+                }
+            }
+        }
+
+        visited[vertex] = false;
+        // If no path found from the current vertex, remove it from the path
+        currentPath.remove(currentPath.size() - 1);
+    }
+
+    public List<Integer> findShortestPath(List<List<Integer>> allPath) {
+        List<Integer> shortestPath = new ArrayList<>();
+        int shortestLength = Integer.MAX_VALUE;
+
+        for (List<Integer> path : allPath) {
+            if (path.size() < shortestLength) {
+                shortestPath = path;
+                shortestLength = path.size();
+            }
+        }
+        return shortestPath;
+    }
+}
 
 public class testing {
     public static void main(String[] args) {
@@ -28,9 +100,9 @@ public class testing {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("Press 1 for Check Route");
-            System.out.println("Press 2 for Exit\n");
-            System.out.print("Enter Your Choice: ");
+            System.out.println("1. Check Route");
+            System.out.println("2. Exit");
+            System.out.print("Enter your choice: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -51,12 +123,33 @@ public class testing {
 
                         System.out.print("******************************************************\n");
                         scanner.nextLine();
+          
+                        System.out.print("Add/Delete a point (Y/N): ");
+                        String addDelete = scanner.nextLine();
+
+                    if (addDelete.equalsIgnoreCase("Y")) {
+                        System.out.print("Add or Delete (A/D): ");
+                        String operation = scanner.nextLine();
+                        if (operation.equalsIgnoreCase("A")) {
+                            graph.addVertex();
+                            System.out.println("Point added successfully.");
+                        } else if (operation.equalsIgnoreCase("D")) {
+                            System.out.print("Enter the point to delete: ");
+                            int pointToDelete = scanner.nextInt();
+                            scanner.nextLine(); // Consume the newline character
+                            graph.removeVertex(pointToDelete);
+                            System.out.println("Point deleted successfully.");
+                        } else {
+                            System.out.println("Invalid operation.");
+                        }
+}
+
 
                         List<List<Integer>> allPaths = graph.findPathDFS(startVertex, destinationVertex);
 
                         if (allPaths.isEmpty()) {
                             System.out.println("* NO PATH FROM " + startVertex + " -> " + destinationVertex);
-                            System.out.println("* PLEASE TRY AGAIN");
+                            System.out.println("* PLEASETRY AGAIN");
                             System.out.println("******************************************************");
                         } else {
                             int count = 1;
@@ -74,7 +167,7 @@ public class testing {
                     exit = true;
                     break;
                 default:
-                    System.out.println("Invalid choice. Please try again!");
+                    System.out.println("Invalid choice. Please try again.");
                     break;
             }
         }
