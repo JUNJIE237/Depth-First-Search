@@ -3,21 +3,6 @@ package srs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-<<<<<<< Updated upstream
-import srs.Graph;
-import srs.Edge;
-
-public class testing {
-    public static void main(String[] args) {
-        Graph graph = new Graph(7);
-        graph.addEdge(0, 1, 3);  // Edge from 0 to 1 with weight 3
-        graph.addEdge(0, 2, 5);  // Edge from 0 to 2 with weight 5
-        graph.addEdge(1, 3, 2);  // Edge from 1 to 3 with weight 2
-        graph.addEdge(1, 4, 4);  // Edge from 1 to 4 with weight 4
-        graph.addEdge(2, 3, 3);  // Edge from 2 to 3 with weight 3
-        graph.addEdge(4, 5, 1);  // Edge from 4 to 5 with weight 1
-=======
-
 
 public class testing {
     public static void main(String[] args) {
@@ -34,21 +19,20 @@ public class testing {
         graph.addCity("BERLIN");
         graph.addCity("MOSCOW");
 
-        graph.addEdge(0, 1);
-        graph.addEdge(0, 2);
-        graph.addEdge(1, 3);
-        graph.addEdge(1, 4);
-        graph.addEdge(2, 3);
-        graph.addEdge(4, 5);
-        graph.addEdge(2, 6);
-        graph.addEdge(2, 8);
-        graph.addEdge(7, 8);
-        graph.addEdge(5, 2);
-        graph.addEdge(6, 9);
-        graph.addEdge(7, 3);
-        graph.addEdge(10, 2);
-        graph.addEdge(9, 4);
->>>>>>> Stashed changes
+        graph.addEdge(0, 1, 3);
+        graph.addEdge(0, 2, 5);
+        graph.addEdge(1, 3, 4);
+        graph.addEdge(1, 4, 6);
+        graph.addEdge(2, 3, 10);
+        graph.addEdge(4, 5, 2);
+        graph.addEdge(2, 6, 1);
+        graph.addEdge(2, 8, 11);
+        graph.addEdge(7, 8, 5);
+        graph.addEdge(5, 2, 9);
+        graph.addEdge(6, 9, 9);
+        graph.addEdge(7, 3, 3);
+        graph.addEdge(10, 2, 4);
+        graph.addEdge(9, 4, 3);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -74,16 +58,16 @@ public class testing {
 
                     while (!pathFound) {
                         System.out.println("******************************************************");
-                        System.out.println("* 1. NEW YORK");
-                        System.out.println("* 2. LONDON");
-                        System.out.println("* 3. TOKYO");
-                        System.out.println("* 4. KUALA LUMPUR");
-                        System.out.println("* 5. SHANGHAI");
-                        System.out.println("* 6. PARIS");
-                        System.out.println("* 7. RIO");
-                        System.out.println("* 8. BANGKOK");
-                        System.out.println("* 9. BERLIN");
-                        System.out.println("* 10. MOSCOW");
+                        System.out.println("* 1. NEW YORK                                        *");
+                        System.out.println("* 2. LONDON                                          *");
+                        System.out.println("* 3. TOKYO                                           *");
+                        System.out.println("* 4. KUALA LUMPUR                                    *");
+                        System.out.println("* 5. SHANGHAI                                        *");
+                        System.out.println("* 6. PARIS                                           *");
+                        System.out.println("* 7. RIO                                             *");
+                        System.out.println("* 8. BANGKOK                                         *");
+                        System.out.println("* 9. BERLIN                                          *");
+                        System.out.println("* 10. MOSCOW                                         *");
                         System.out.print("* ENTER YOUR CURRENT LOCATION: ");
 
                         int startVertex = scanner.nextInt();
@@ -115,14 +99,6 @@ public class testing {
                                 System.out.println("* PATH " + count + ": " + cityPath);
                                 count++;
                             }
-<<<<<<< Updated upstream
-                            List<Integer> shortestPath = graph.findShortestPath(allPaths);
-                            System.out.println("* SHORTEST PATH FROM " + startVertex + " -> " + destinationVertex + ": " + shortestPath);
-
-                            int totalTime = calculateTotalTime(shortestPath, graph);
-                            System.out.println("* ARRIVAL TIME: " + totalTime + " hours");
-
-=======
                             System.out.println("* SHORTEST PATH FROM " + startCity + " -> " + endCity + ": ");
                             List<Integer> shortestPath = graph.findShortestPath(allPaths);
                             List<String> shortestCityPath = new ArrayList<>();
@@ -130,8 +106,10 @@ public class testing {
                                 shortestCityPath.add(graph.getCity().get(vertex));
                             }
                             System.out.println(shortestCityPath);
+        
+                            int totalTime = calculateTotalTime(shortestPath, graph);
+                            System.out.println("* ARRIVAL TIME: " + totalTime + " hours");
                             System.out.println("******************************************************");
->>>>>>> Stashed changes
                             pathFound = true;
                         }
                     }
@@ -152,18 +130,8 @@ public class testing {
         scanner.close();
     }
 
-    public static int calculateTotalTime(List<Integer> path, Graph graph) {
-        int totalTime = 0;
-        for (int i = 0; i < path.size() - 1; i++) {
-            int source = path.get(i);
-            int destination = path.get(i + 1);
-            for (Edge edge : graph.adjacencyList[source]) {
-                if (edge.getDestination() == destination) {
-                    totalTime += edge.getWeight();
-                    break;
-                }
-            }
-        }
-        return totalTime;
+    private static int calculateTotalTime(List<Integer> shortestPath, Graph graph) {
+        return 0;
     }
 }
+
