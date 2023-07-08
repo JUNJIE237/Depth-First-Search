@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Graph {
-     private int numVertices;
-    private List<Integer>[] adjacencyList;
+    private int numVertices;
+    private List<Edge>[] adjacencyList;
+    private List<String> cityName;
 
     public Graph(int numVertices) {
         this.numVertices = numVertices;
@@ -21,6 +22,7 @@ class Graph {
         Edge edge = new Edge(destination, weight);
         adjacencyList[source].add(edge);
     }
+
 
     public List<List<Integer>> findPathDFS(int start, int destination) {
         boolean[] visited = new boolean[numVertices];
@@ -71,22 +73,22 @@ class Graph {
     public List<String> getCity() {
         return cityName;
     }
-}
 
-class Edge {
-    private int destination;
-    private int weight;
-
-    public Edge(int destination, int weight) {
-        this.destination = destination;
-        this.weight = weight;
-    }
-
-    public int getDestination() {
-        return destination;
-    }
-
-    public int getWeight() {
-        return weight;
+    public int calculateTotalTime(List<Integer> path, Graph graph) {
+        int totalTime = 0;
+        for (int i = 0; i < path.size() - 1; i++) {
+            int source = path.get(i);
+            int destination = path.get(i + 1);
+            for (Edge edge : graph.adjacencyList[source]) {
+                if (edge.getDestination() == destination) {
+                    totalTime += edge.getWeight();
+                    break;
+                }
+            }
+        }
+        return totalTime;
     }
 }
+
+
+
