@@ -13,6 +13,10 @@ class Edge {
         return destination;
     }
 
+    public void setDestination(int destination) {
+        this.destination = destination;
+    }
+
     public int getWeight() {
         return weight;
     }
