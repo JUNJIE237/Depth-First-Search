@@ -1,38 +1,52 @@
 package srs;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class testing {
     public static void main(String[] args) {
-        Graph graph = new Graph(20);
 
-        graph.addCity("NEW YORK");
-        graph.addCity("LONDON");
-        graph.addCity("TOKYO");
-        graph.addCity("KUALA LUMPUR");
-        graph.addCity("SHANGHAI");
-        graph.addCity("PARIS");
-        graph.addCity("RIO");
-        graph.addCity("BANGKOK");
-        graph.addCity("BERLIN");
-        graph.addCity("MOSCOW");
+        Graph graph = new Graph(Integer.MAX_VALUE);
 
-        graph.addEdge(0, 1, 3);
-        graph.addEdge(0, 2, 5);
-        graph.addEdge(1, 3, 4);
-        graph.addEdge(1, 4, 6);
-        graph.addEdge(2, 3, 10);
-        graph.addEdge(4, 5, 2);
-        graph.addEdge(2, 6, 1);
-        graph.addEdge(2, 8, 11);
-        graph.addEdge(7, 8, 5);
-        graph.addEdge(5, 2, 9);
-        graph.addEdge(6, 9, 9);
-        graph.addEdge(7, 3, 3);
-        graph.addEdge(10, 2, 4);
-        graph.addEdge(9, 4, 3);
+        BufferedReader reader = null;
+        BufferedReader reader2 = null;
+        try {
+            reader = new BufferedReader(new FileReader("/Users/aishapeng/Python/MalaysianPayGap-master/data/CityName.txt"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String CityName = line.trim();
+
+                graph.addCity(CityName);
+            }
+
+            graph.setNumVertices(graph.getCityCount());
+
+            reader2 = new BufferedReader(new FileReader("/Users/aishapeng/Downloads/Vertices.txt"));
+            String line2;
+            while ((line2 = reader2.readLine()) != null) {
+                String[] digits = line2.split(" ");
+                if (digits.length == 3) {
+                    int source = Integer.parseInt(digits[0]);
+                    int destination = Integer.parseInt(digits[1]);
+                    int weight = Integer.parseInt(digits[2]);
+
+                    graph.addEdge(source, destination, weight);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (reader != null)
+                    reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         Scanner scanner = new Scanner(System.in);
 
@@ -46,7 +60,8 @@ public class testing {
 
         while (!exit) {
             System.out.println("* 1. Check Route                                     *");
-            System.out.println("* 2. Exit                                            *");
+            System.out.println("* 2. Add / Remove City                               *");
+            System.out.println("* 3. Exit                                            *");
             System.out.print("* Enter Your Choice: ");
 
             int choice = scanner.nextInt();
@@ -71,43 +86,46 @@ public class testing {
                         System.out.print("* ENTER YOUR CURRENT LOCATION: ");
 
                         int startVertex = scanner.nextInt();
+                        scanner.nextLine();
 
                         System.out.print("******************************************************");
-                        scanner.nextLine();
 
                         System.out.print("\n* ENTER YOUR DESTINATION: ");
                         int destinationVertex = scanner.nextInt();
                         scanner.nextLine();
 
                         List<List<Integer>> allPaths = graph.findPathDFS(startVertex - 1, destinationVertex - 1);
-
-                        String startCity = graph.getCity().get(startVertex - 1);
-                        String endCity = graph.getCity().get(destinationVertex - 1);
+                        
+                        String startCity = graph.getCity(startVertex - 1);
+                        String endCity = graph.getCity(destinationVertex - 1);
 
                         if (allPaths.isEmpty()) {
                             System.out.println("* NO PATH FROM " + startCity + " -> " + endCity);
                             System.out.println("* PLEASE TRY AGAIN");
-                            System.out.println("******************************************************");
                         } else {
                             System.out.println("******************************************************");
                             int count = 1;
                             for (List<Integer> path : allPaths) {
                                 List<String> cityPath = new ArrayList<>();
                                 for (int vertex : path) {
-                                    cityPath.add(graph.getCity().get(vertex));
+                                    String city = graph.getCity(vertex);
+                                    cityPath.add(city);
                                 }
                                 System.out.println("* PATH " + count + ": " + cityPath);
                                 count++;
                             }
                             System.out.println("* SHORTEST PATH FROM " + startCity + " -> " + endCity + ": ");
+                            
                             List<Integer> shortestPath = graph.findShortestPath(allPaths);
                             List<String> shortestCityPath = new ArrayList<>();
+                            
                             for (int vertex : shortestPath) {
-                                shortestCityPath.add(graph.getCity().get(vertex));
+                                String city = graph.getCity(vertex);
+                                shortestCityPath.add(city);
                             }
                             System.out.println(shortestCityPath);
         
-                            int totalTime = calculateTotalTime(shortestPath, graph);
+                            int totalTime = graph.calculateTotalTime(shortestPath);
                             System.out.println("* ARRIVAL TIME: " + totalTime + " hours");
                             System.out.println("******************************************************");
                             pathFound = true;
@@ -115,6 +133,41 @@ public class testing {
                     }
                     break;
                 case 2:
+                    System.out.println("******************************************************");
+                    boolean valid = false;
+                    while(!valid)
+                    {
+                        System.out.print("* ADD OR DELETE (A/D): ");
+                        String answer = scanner.nextLine();
+                        if (answer.equalsIgnoreCase("A")) {
+                            System.out.print("* ENTER NEW CITY NAME: ");
+                            String newCityName = scanner.nextLine();
+                            System.out.println("* ENTER ARRIVAL TIME: ");
+                            int[] timeTaken = new int[graph.getNumberOfVertices()];
+                            for (int i = 0; i < timeTaken.length; i++) {
+                                System.out.print("* TIME TAKEN FROM [" + graph.getCity(i) + "] -> [" + newCityName + "]: ");
+                                timeTaken[i] = scanner.nextInt();
+                                scanner.nextLine();
+                            }
+                            graph.addNewCity(newCityName, timeTaken);
+                            System.out.println("* CITY ADDED! ");
+                            System.out.println("******************************************************");
+                            valid = true;
+                        } else if (answer.equalsIgnoreCase("D")) {
+                            System.out.print("* ENTER CITY TO BE REMOVED: ");
+                            int removeCityName = scanner.nextInt();
+                            scanner.nextLine(); 
+                            graph.removeCity(removeCityName - 1);
+                            System.out.println("* CITY REMOVED!");
+                            System.out.println("******************************************************");
+                            valid = true;
+                        } else {
+                            System.out.println("* Invalid operation.");
+                            System.out.println("******************************************************");
+                        }
+                    }
+                    break;
+                case 3:
                     exit = true;
                     break;
                 default:
@@ -130,8 +183,5 @@ public class testing {
         scanner.close();
     }
 
-    private static int calculateTotalTime(List<Integer> shortestPath, Graph graph) {
-        return 0;
-    }
 }
 
