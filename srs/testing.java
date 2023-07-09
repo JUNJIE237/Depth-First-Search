@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class testing {
     public static void main(String[] args) {
 
-        Graph graph = new Graph(Integer.MAX_VALUE);
+        Graph graph = new Graph(20);
 
         BufferedReader reader = null;
         BufferedReader reader2 = null;
@@ -34,7 +34,7 @@ public class testing {
                     int destination = Integer.parseInt(digits[1]);
                     int weight = Integer.parseInt(digits[2]);
 
-                    graph.addEdge(source, destination, weight);
+                    graph.addEdge(source - 1, destination - 1, weight);
                 }
             }
         } catch (IOException e) {
